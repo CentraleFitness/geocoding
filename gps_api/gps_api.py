@@ -42,7 +42,7 @@ def main_test():
     with open(CONFIGFILE_PATH, 'r') as config_fh:
         data = json.load(config_fh)
         assert 'key' in data
-    address = "Amiens"
+    address = "Epitech, Le Kremlin-Bicêtre"
     results = address_to_gps_coord(address, data['key'])
     for result in results:
         print(result)
