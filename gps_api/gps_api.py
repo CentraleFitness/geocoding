@@ -1,10 +1,19 @@
+"""
+Utility functions
+"""
 
-import requests
 import json
+import requests
 
 CONFIGFILE_PATH = "./settings.json"
 
-def address_to_gps_coord(address, api_key):
+def address_to_gps_coord(address, api_key) -> list:
+    """
+    Uses the Google Maps Geocoding API to convert an address
+    to the corresponding GPS coordinates.
+    Return the results matching the address on a list of
+    tuples (latitude, longitude)
+    """
     resp = requests.get(
         "https://maps.googleapis.com/maps/api/geocode/json",
         params=
@@ -26,8 +35,9 @@ def address_to_gps_coord(address, api_key):
     return matches
 
 def main_test():
-    with open(CONFIGFILE_PATH, 'r') as fh:
-        data = json.load(fh)
+    """ Main Test """
+    with open(CONFIGFILE_PATH, 'r') as config_fh:
+        data = json.load(config_fh)
         assert 'key' in data
     address = "Lieu dit Poggie, 20230, St Lucia di moriani"
     results = address_to_gps_coord(address, data['key'])
