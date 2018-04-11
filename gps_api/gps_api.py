@@ -25,7 +25,7 @@ def address_to_gps_coord(address, api_key):
         matches.append(gps_coord)
     return matches
 
-def main_test(address, api_key):
+def main_test():
     with open(CONFIGFILE_PATH, 'r') as fh:
         data = json.load(fh)
         assert 'key' in data
