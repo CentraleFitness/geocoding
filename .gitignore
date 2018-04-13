@@ -291,3 +291,4 @@ __pycache__/
 *.pyproj
 *.sln
 /gym_referencer/local_data.json
+/gym_referencer/venv
