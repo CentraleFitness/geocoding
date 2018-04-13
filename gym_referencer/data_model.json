@@ -1,0 +1,12 @@
+{
+  "<id_gym>": {
+    "name": "",
+    "id_owner": "",
+    "address": {
+      "street": "",
+      "zip": "",
+      "city": "",
+      "country": ""
+    }
+  }
+}

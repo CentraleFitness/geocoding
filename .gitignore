@@ -290,3 +290,4 @@ __pycache__/
 /gps_api/settings.json
 *.pyproj
 *.sln
+/gym_referencer/local_data.json
