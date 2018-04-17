@@ -292,3 +292,4 @@ __pycache__/
 *.sln
 /gym_referencer/local_data.json
 /gym_referencer/venv
+/gym_referencer/config/master.py

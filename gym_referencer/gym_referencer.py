@@ -1,10 +1,10 @@
 import json
 
-from elasticsearch import Elasticsearch
+from cluster import ESManager
 
 def main() -> None:
-    es_cluster = Elasticsearch([{'host': '127.0.0.1', 'port': 9200}])
-    print(es_cluster.info())
+    es_cluster = ESManager()
+    print(es_cluster._es.info())
 
 if __name__ == "__main__":
     main()
