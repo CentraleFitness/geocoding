@@ -59,3 +59,35 @@ class ESManager(object):
                     }
                 }
             })
+
+    def delete_index(self, name: str) -> bool:
+        try:
+            self._es.indices.delete(index=name)
+        except Exception as ex:
+            self.logger.error(
+                "Exception occured in _create_index: {}".format(ex))
+            return False
+        self.logger.info("Deleted index {}".format(name))
+        return True
+
+    def index_exist(self, name: str) -> bool:
+        try:
+            ret = self._es.indices.exists(index=name)
+        except Exception as ex:
+            self.logger.error(
+                "Exception occured in index_exist: {}".format(ex))
+            return False
+        return ret
+
+    def reference_gym(self, gym) -> bool:
+        try:
+            ret = self._es.index(
+                index='gym',
+                doc_type=gym.address['country'],
+                id=gym.id_gym,
+                body=gym.body_data())
+        except Exception as ex:
+            self.logger.error(
+                "Exception occured in index_exist: {}".format(ex))
+            return False
+        return ret['result'] in ('created', 'updated')
