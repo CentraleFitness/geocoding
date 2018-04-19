@@ -11,16 +11,13 @@ app = Flask(__name__)
 
 CONFIGFILE_PATH = "./settings.json"
 
-def parse_api_key():
+def parse_json_file():
     """
     Parse the json config file to retreive the Google Map API key
     """
     with open(CONFIGFILE_PATH, 'r') as config_fh:
         data = json.load(config_fh)
-        assert 'key' in data
-        return data['key']
-
-API_KEY = parse_api_key()
+        return data['key'], data['host'], data['port']
 
 def address_to_gps_coord(address, **kwargs) -> list:
     """
@@ -72,4 +69,5 @@ def geocoding_main():
     return jsonify(location)
 
 if __name__ == "__main__":
-    app.run()
+    API_KEY, HOST, PORT = parse_json_file()
+    app.run(host=HOST, port=PORT)
