@@ -17,7 +17,7 @@ def parse_json_file():
     """
     with open(CONFIGFILE_PATH, 'r') as config_fh:
         data = json.load(config_fh)
-        return data['key'], data['host'], data['port']
+    return data['key'], data['host'], data['port']
 
 def address_to_gps_coord(address, **kwargs) -> list:
     """
