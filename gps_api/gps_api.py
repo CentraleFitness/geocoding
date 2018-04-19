@@ -1,13 +1,25 @@
 """
-Utility functions
+Flask service to get the geolocation of a given address
 """
 
 import json
 import requests
 
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
 CONFIGFILE_PATH = "./settings.json"
 
-def address_to_gps_coord(address, api_key) -> list:
+def parse_api_key():
+    with open(CONFIGFILE_PATH, 'r') as config_fh:
+        data = json.load(config_fh)
+        assert 'key' in data
+        return data['key']
+
+API_KEY = parse_api_key()
+
+def address_to_gps_coord(address, **kwargs) -> list:
     """
     Uses the Google Maps Geocoding API to convert an address
     to the corresponding GPS coordinates.
@@ -20,7 +32,7 @@ def address_to_gps_coord(address, api_key) -> list:
             params=
             {
                 'address': address,
-                'key': api_key
+                'key': API_KEY
             })
         resp.raise_for_status()
         jresp = resp.json()
@@ -35,17 +47,23 @@ def address_to_gps_coord(address, api_key) -> list:
         location = result['geometry']['location']
         gps_coord = (location['lat'], location['lng'])
         matches.append(gps_coord)
+    if matches and kwargs.get('closest', False):
+        return matches[0]
     return matches
 
-def main_test():
-    """ Main Test """
-    with open(CONFIGFILE_PATH, 'r') as config_fh:
-        data = json.load(config_fh)
-        assert 'key' in data
-    address = "Epitech, Le Kremlin-Bicêtre"
-    results = address_to_gps_coord(address, data['key'])
-    for result in results:
-        print(result)
+@app.route('/geocoding', methods=['GET'])
+def geocoding_main():
+    if request.method == 'GET':
+        print(request)
+        params = tuple(comp for comp in (
+            request.args.get('name', ''),
+            request.args.get('street', ''),
+            request.args.get('zip', ''),
+            request.args.get('city', ''),
+            request.args.get('country', ''),
+            ) if comp != '')
+        location = address_to_gps_coord(', '.join(params), closest=True)
+    return jsonify(location)
 
 if __name__ == "__main__":
-    main_test()
+    app.run()
