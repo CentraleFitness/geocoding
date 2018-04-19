@@ -5,15 +5,16 @@ class Gym(object):
     def __init__(self, *args, **kwargs):
         self.id_gym = args[0]
         self.id_owner = args[1]
+        self.name = args[2]
         self.address = {
-            'street': args[2],
-            'zip': args[3],
-            'city': args[4],
-            'country': args[5]
+            'street': args[3],
+            'zip': args[4],
+            'city': args[5],
+            'country': args[6]
             }
         self.location = {
-            'lat': args[6],
-            'lon': args[7]
+            'lat': args[7],
+            'lon': args[8]
             }
         return super().__init__()
 
@@ -21,6 +22,7 @@ class Gym(object):
         return {
             'id_gym': self.id_gym,
             'id_owner': self.id_owner,
+            'name': self.name,
             'address': self.address,
             'location': self.location
             }

@@ -10,6 +10,21 @@ logging.config.dictConfig(LOGGING_DICT)
 
 GYM_DATA_PATH = './gym_data.json'
 
+def request_geoloc(address: dict) -> tuple:
+    try:
+        resp = requests.get(
+            "http://127.0.0.1:4455/geocoding",
+            params=address)
+        resp.raise_for_status()
+        jresp = resp.json()
+    except requests.RequestException as ex:
+        print(ex)
+        return []
+    except ValueError as ex:
+        print(ex)
+        return []
+    return (jresp[0], jresp[1])
+
 def main() -> None:
     es_cluster = ESManager()
     print(es_cluster._es.info())
@@ -21,24 +36,24 @@ def main() -> None:
 
     gym_list = list()
     for id_gym in data:
-        name = data[id_gym]['name']
-        address = (
-            data[id_gym]['address']['street'],
-            data[id_gym]['address']['zip'],
-            data[id_gym]['address']['city'],
-            data[id_gym]['address']['country']
-            )
-
-        #geo_loc = address_to_gps_coord(', '.join(tuple(name) + address), '', closest=True)
-        geo_loc = None
-
+        address_dict = data[id_gym]['address']
+        address_dict.update({'name': data[id_gym]['name']})
+        geo_loc = request_geoloc(address_dict)
         gym = Gym(
             id_gym,
             data[id_gym]['id_owner'],
-            *address,
+            address_dict['name'],
+            address_dict['street'],
+            address_dict['zip'],
+            address_dict['city'],
+            address_dict['country'],
             *geo_loc
             )
         gym_list.append(gym)
+    for gym in gym_list:
+        ret = es_cluster.reference_gym(gym)
+        print(ret)
+        pass
 
 if __name__ == "__main__":
     main()
